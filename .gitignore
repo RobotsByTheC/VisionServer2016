@@ -1,0 +1,22 @@
+# ignore file backups
+*~
+*.bak.xml
+
+# ignore build and generated files
+/bin/
+/build/
+/doc/
+/dist/
+
+*.jar
+
+# Java class files
+*.class
+
+#Gradle
+.gradletasknamecache
+.gradle/
+
+!gradle-wrapper.jar
+
+.classpath
