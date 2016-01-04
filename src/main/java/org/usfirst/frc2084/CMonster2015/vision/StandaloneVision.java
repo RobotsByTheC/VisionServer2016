@@ -22,7 +22,6 @@ import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2015.vision.Range;
 import org.usfirst.frc.team2084.CMonster2015.vision.VideoServer;
 import org.usfirst.frc.team2084.CMonster2015.vision.capture.CameraCapture;
-import org.usfirst.frc2084.CMonster2015.vision.AxisCameraLeds.Color;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
