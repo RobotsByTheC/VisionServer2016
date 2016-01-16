@@ -6,16 +6,18 @@ buildscript {
 
 repositories {
   maven {
-	url = "http://first.wpi.edu/FRC/roborio/maven"
+	url = "http://first.wpi.edu/FRC/roborio/maven/release"
   }
   mavenCentral()
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = "org.usfirst.frc2084.CMonster2015.vision.StandaloneVision"
 
 dependencies {
   compile project(':VisionProcessor2016')
-  compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:0.1.+'
-  compile 'com.hierynomus:sshj:0.15.0'
+  compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:desktop'
 }

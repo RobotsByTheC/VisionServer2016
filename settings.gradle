@@ -1,3 +1,1 @@
-include ':VisionProcessor2016'
-
-project(':VisionProcessor2016').projectDir = new File(settingsDir, '../VisionProcessor2016')
+includeFlat 'VisionProcessor2016'
