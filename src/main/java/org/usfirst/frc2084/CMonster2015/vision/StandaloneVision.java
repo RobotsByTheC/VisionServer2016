@@ -16,10 +16,12 @@ import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
 import org.usfirst.frc.team2084.CMonster2015.vision.ImageHandler;
+import org.usfirst.frc.team2084.CMonster2015.vision.NullProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2015.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.VideoServer;
 import org.usfirst.frc.team2084.CMonster2015.vision.VisionParameters;
+import org.usfirst.frc.team2084.CMonster2015.vision.VisionProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.capture.CameraCapture;
 
 /**
@@ -38,7 +40,7 @@ public class StandaloneVision {
     private final HashMap<String, ImageFrame> debugFrames = new HashMap<>();
 
     private final CameraCapture camera = new CameraCapture(0);
-    private final HighGoalProcessor processor = new HighGoalProcessor(camera);
+    private final VisionProcessor processor = new HighGoalProcessor(camera);
     private VideoServer videoServer;
 
     /**
@@ -46,8 +48,8 @@ public class StandaloneVision {
      * window.
      */
     public StandaloneVision() {
-        try {            
-            videoServer = new VideoServer(8080, 75);
+        try {
+            videoServer = new VideoServer(1180, 75);
             videoServer.start();
 
             // Initialize the vision processor.
