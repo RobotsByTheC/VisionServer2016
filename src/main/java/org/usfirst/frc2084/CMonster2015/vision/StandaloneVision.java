@@ -10,37 +10,22 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.Inet4Address;
 import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
-import org.usfirst.frc.team2084.CMonster2015.vision.BallProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.ImageHandler;
 import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
-import org.usfirst.frc.team2084.CMonster2015.vision.Range;
+import org.usfirst.frc.team2084.CMonster2015.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.VideoServer;
+import org.usfirst.frc.team2084.CMonster2015.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2015.vision.capture.CameraCapture;
-
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * @author Ben Wolsieffer
  */
 public class StandaloneVision {
-
-    public static final String H_MIN_KEY = "hMin";
-    public static final String H_MAX_KEY = "hMax";
-
-    public static final String S_MIN_KEY = "sMin";
-    public static final String S_MAX_KEY = "sMax";
-
-    public static final String V_MIN_KEY = "vMin";
-    public static final String V_MAX_KEY = "vMax";
-
-    public static final String MIN_SIZE_KEY = "minSize";
 
     public static final int CAMERA_OPEN_ERROR = 1;
     public static final int VIDEO_SERVER_ERROR = 2;
@@ -52,19 +37,16 @@ public class StandaloneVision {
     private ImageFrame imageFrame;
     private final HashMap<String, ImageFrame> debugFrames = new HashMap<>();
 
-    private final CameraCapture camera = new CameraCapture(0/* "http://192.168.0.90/mjpg/video.mjpg" */);
-    private final BallProcessor processor = new BallProcessor(camera);
+    private final CameraCapture camera = new CameraCapture(0);
+    private final HighGoalProcessor processor = new HighGoalProcessor(camera);
     private VideoServer videoServer;
-
-    private final ITable visionTable = NetworkTable.getTable("SmartDashboard").getSubTable(
-            "Vision");
 
     /**
      * Runs the vision processing algorithm and displays the results in a
      * window.
      */
     public StandaloneVision() {
-        try {
+        try {            
             videoServer = new VideoServer(8080, 75);
             videoServer.start();
 
@@ -76,13 +58,6 @@ public class StandaloneVision {
                  */
                 @Override
                 public void imageProcessed(Mat image) {
-                    processor.setHThreshold(new Range((int) visionTable.getNumber(
-                            H_MIN_KEY, 0), (int) visionTable.getNumber(H_MAX_KEY, 255)));
-                    processor.setSThreshold(new Range((int) visionTable.getNumber(
-                            S_MIN_KEY, 0), (int) visionTable.getNumber(S_MAX_KEY, 255)));
-                    processor.setVThreshold(new Range((int) visionTable.getNumber(
-                            V_MIN_KEY, 0), (int) visionTable.getNumber(V_MAX_KEY, 255)));
-
                     if (!headless) {
                         try {
                             SwingUtilities.invokeAndWait(() -> imageFrame.showImage(image));
