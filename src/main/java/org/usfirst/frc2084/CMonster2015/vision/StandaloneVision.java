@@ -15,12 +15,10 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
-import org.usfirst.frc.team2084.CMonster2015.vision.ImageHandler;
-import org.usfirst.frc.team2084.CMonster2015.vision.NullProcessor;
-import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2015.vision.HighGoalProcessor;
+import org.usfirst.frc.team2084.CMonster2015.vision.ImageHandler;
+import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2015.vision.VideoServer;
-import org.usfirst.frc.team2084.CMonster2015.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2015.vision.VisionProcessor;
 import org.usfirst.frc.team2084.CMonster2015.vision.capture.CameraCapture;
 
