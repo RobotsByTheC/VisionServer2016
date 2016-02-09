@@ -2,15 +2,22 @@ buildscript {
   repositories {
 	mavenCentral()
   }
+  dependencies {
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
+  }
 }
 
 repositories {
+  maven {
+    url "${System.getProperty('user.home')}/releases/maven/development"
+  }
   maven {
 	url = "http://first.wpi.edu/FRC/roborio/maven/release"
   }
   mavenCentral()
 }
 
+apply plugin: 'com.google.osdetector'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
@@ -19,5 +26,9 @@ mainClassName = "org.usfirst.frc2084.CMonster2016.vision.StandaloneVision"
 
 dependencies {
   compile project(':VisionProcessor2016')
-  compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:desktop'
+  String ntType = "desktop"
+  if (osdetector.arch.contains("arm")) {
+  	ntType = "arm"
+  }
+  compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:' + ntType
 }
