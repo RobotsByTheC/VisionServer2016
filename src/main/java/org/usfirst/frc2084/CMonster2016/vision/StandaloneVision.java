@@ -95,7 +95,9 @@ public class StandaloneVision {
                 }
             });
 
-            initGUI();
+            if (!headless) {
+                initGUI();
+            }
 
             processor.start();
 
@@ -113,13 +115,8 @@ public class StandaloneVision {
                 imageFrame.setVisible(true);
             });
         } catch (InvocationTargetException | InterruptedException e) {
-            if (e.getCause() instanceof HeadlessException) {
-                System.out.println("Cannot run in a headess environment.");
-                System.exit(HEADLESS_ERROR);
-            } else {
-                e.printStackTrace();
-                System.exit(UNKNOWN_ERROR);
-            }
+            e.printStackTrace();
+            System.exit(UNKNOWN_ERROR);
         }
     }
 
