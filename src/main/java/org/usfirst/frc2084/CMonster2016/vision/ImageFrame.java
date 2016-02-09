@@ -4,7 +4,7 @@
  * Open Source Software - may be modified and shared by FRC teams. The code must
  * be accompanied by the BSD license file in the root directory of the project.
  */
-package org.usfirst.frc2084.CMonster2015.vision;
+package org.usfirst.frc2084.CMonster2016.vision;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 import org.opencv.core.Mat;
-import org.usfirst.frc.team2084.CMonster2015.vision.ImageConvertor;
+import org.usfirst.frc.team2084.CMonster2016.vision.ImageConvertor;
 
 /**
  * @author Ben Wolsieffer

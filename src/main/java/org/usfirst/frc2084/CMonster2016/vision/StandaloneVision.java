@@ -4,7 +4,7 @@
  * Open Source Software - may be modified and shared by FRC teams. The code must
  * be accompanied by the BSD license file in the root directory of the project.
  */
-package org.usfirst.frc2084.CMonster2015.vision;
+package org.usfirst.frc2084.CMonster2016.vision;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
@@ -15,12 +15,12 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
-import org.usfirst.frc.team2084.CMonster2015.vision.HighGoalProcessor;
-import org.usfirst.frc.team2084.CMonster2015.vision.ImageHandler;
-import org.usfirst.frc.team2084.CMonster2015.vision.OpenCVLoader;
-import org.usfirst.frc.team2084.CMonster2015.vision.VideoServer;
-import org.usfirst.frc.team2084.CMonster2015.vision.VisionProcessor;
-import org.usfirst.frc.team2084.CMonster2015.vision.capture.CameraCapture;
+import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
+import org.usfirst.frc.team2084.CMonster2016.vision.ImageHandler;
+import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
+import org.usfirst.frc.team2084.CMonster2016.vision.VideoServer;
+import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor;
+import org.usfirst.frc.team2084.CMonster2016.vision.capture.CameraCapture;
 
 /**
  * @author Ben Wolsieffer

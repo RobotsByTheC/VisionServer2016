@@ -15,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-mainClassName = "org.usfirst.frc2084.CMonster2015.vision.StandaloneVision"
+mainClassName = "org.usfirst.frc2084.CMonster2016.vision.StandaloneVision"
 
 dependencies {
   compile project(':VisionProcessor2016')
