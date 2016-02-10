@@ -7,7 +7,6 @@
 package org.usfirst.frc2084.CMonster2016.vision;
 
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.ImageHandler;
 import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2016.vision.VideoServer;
+import org.usfirst.frc.team2084.CMonster2016.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.capture.CameraCapture;
 
@@ -29,16 +29,15 @@ public class StandaloneVision {
 
     public static final int CAMERA_OPEN_ERROR = 1;
     public static final int VIDEO_SERVER_ERROR = 2;
-    public static final int HEADLESS_ERROR = 3;
-    public static final int UNKNOWN_ERROR = 4;
+    public static final int UNKNOWN_ERROR = 3;
 
     private static final boolean headless = GraphicsEnvironment.isHeadless();
 
     private ImageFrame imageFrame;
     private final HashMap<String, ImageFrame> debugFrames = new HashMap<>();
 
-    private final CameraCapture camera = new CameraCapture(0);
-    private final VisionProcessor processor = new HighGoalProcessor(camera);
+    private CameraCapture camera;
+    private VisionProcessor processor;
     private VideoServer videoServer;
 
     /**
@@ -47,9 +46,18 @@ public class StandaloneVision {
      */
     public StandaloneVision() {
         try {
+            int device = VisionParameters.getCameraSourceLocal();
+            if (device != -1) {
+                camera = new CameraCapture(device);
+            } else {
+                camera = new CameraCapture(VisionParameters.getCameraSourceRemote());
+            }
+
+            processor = new HighGoalProcessor(camera);
+            
             videoServer = new VideoServer(1180, 75);
             videoServer.start();
-
+            
             // Initialize the vision processor.
             processor.addImageHandler(new ImageHandler() {
 
