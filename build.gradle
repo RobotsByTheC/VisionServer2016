@@ -24,6 +24,10 @@ apply plugin: 'application'
 
 mainClassName = "org.usfirst.frc2084.CMonster2016.vision.StandaloneVision"
 
+javadoc {
+  failOnError false
+}
+
 dependencies {
   compile project(':VisionProcessor2016')
   String ntType = "desktop"
@@ -31,4 +35,10 @@ dependencies {
   	ntType = "arm"
   }
   compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:' + ntType
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'org.usfirst.frc2084.CMonster2016.vision.StandaloneVision'
+  }
 }

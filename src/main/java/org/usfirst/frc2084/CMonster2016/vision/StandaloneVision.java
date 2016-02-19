@@ -54,10 +54,10 @@ public class StandaloneVision {
             }
 
             processor = new HighGoalProcessor(camera);
-            
+
             videoServer = new VideoServer(1180, 75);
             videoServer.start();
-            
+
             // Initialize the vision processor.
             processor.addImageHandler(new ImageHandler() {
 
@@ -72,6 +72,7 @@ public class StandaloneVision {
                         } catch (InvocationTargetException | InterruptedException e) {
                             e.printStackTrace();
                         }
+                        camera.setExposure(VisionParameters.getExposure());
                     }
                     try {
                         videoServer.sendImage(image);
