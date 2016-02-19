@@ -48,7 +48,6 @@ public class StandaloneVision {
      */
     public StandaloneVision() {
         try {
-            NetworkTable.initialize();
             NetworkTable.setIPAddress("roborio-2084-frc.local");
 
             int device = VisionParameters.getCameraSourceLocal();
