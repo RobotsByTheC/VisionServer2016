@@ -84,6 +84,15 @@ public class StandaloneVision {
                     } catch (IOException e) {
                         System.out.println("Cannot stream video over network: " + e);
                     }
+
+                    if (VisionParameters.shouldShutdown()) {
+                        try {
+                            Runtime.getRuntime().exec("sudo poweroff").waitFor();
+                            System.exit(0);
+                        } catch (InterruptedException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 /**
