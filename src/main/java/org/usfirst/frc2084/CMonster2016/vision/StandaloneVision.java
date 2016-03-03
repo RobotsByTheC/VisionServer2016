@@ -22,8 +22,6 @@ import org.usfirst.frc.team2084.CMonster2016.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.capture.CameraCapture;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-
 /**
  * @author Ben Wolsieffer
  */
@@ -48,8 +46,8 @@ public class StandaloneVision {
      */
     public StandaloneVision() {
         try {
-            NetworkTable.setClientMode();
-            NetworkTable.setIPAddress("roborio-2084-frc.local");
+            // NetworkTable.setClientMode();
+            // NetworkTable.setIPAddress("roborio-2084-frc.local");
 
             int device = VisionParameters.getCameraSourceLocal();
             if (device != -1) {
@@ -78,6 +76,7 @@ public class StandaloneVision {
                             e.printStackTrace();
                         }
                         camera.setExposure(VisionParameters.getExposure());
+                        videoServer.setQuality(VisionParameters.getStreamQuality());
                     }
                     try {
                         videoServer.sendImage(image);
