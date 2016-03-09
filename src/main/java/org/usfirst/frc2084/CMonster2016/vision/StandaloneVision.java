@@ -84,8 +84,7 @@ public class StandaloneVision {
                         } catch (InvocationTargetException | InterruptedException e) {
                             e.printStackTrace();
                         }
-                        camera.setExposure(VisionParameters.getExposure());
-                        camera.setAutoExposure(VisionParameters.getAutoExposure());
+
                         videoServer.setQuality(VisionParameters.getStreamQuality());
                     }
                     try {
