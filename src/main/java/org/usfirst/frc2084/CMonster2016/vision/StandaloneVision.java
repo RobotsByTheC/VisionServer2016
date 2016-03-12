@@ -67,7 +67,7 @@ public class StandaloneVision {
 
             processor = new HighGoalProcessor(camera);
 
-            videoServer = new VideoServer(1180, 75);
+            videoServer = new VideoServer(1180, 20);
             videoServer.start();
 
             // Initialize the vision processor.
