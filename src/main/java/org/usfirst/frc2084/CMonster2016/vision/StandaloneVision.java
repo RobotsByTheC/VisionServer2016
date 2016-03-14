@@ -50,7 +50,7 @@ public class StandaloneVision {
         try {
             // NetworkTable.initialize();
             NetworkTable.setClientMode();
-            NetworkTable.setIPAddress("roborio-2084-frc.local");
+            NetworkTable.setIPAddress("10.20.84.2");
 
             // Wait to get latest network table values
             try {
@@ -67,7 +67,7 @@ public class StandaloneVision {
 
             processor = new HighGoalProcessor(camera);
 
-            videoServer = new VideoServer(1180, 75);
+            videoServer = new VideoServer(5800, 75);
             videoServer.start();
 
             // Initialize the vision processor.
