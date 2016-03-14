@@ -37,6 +37,10 @@ dependencies {
   compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:' + ntType
 }
 
+applicationDistribution.from(file(project(':VisionProcessor2016').projectDir.toString() + '/lib')) {
+    into("lib")
+}
+
 jar {
   manifest {
     attributes 'Main-Class': 'org.usfirst.frc2084.CMonster2016.vision.StandaloneVision'
