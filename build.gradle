@@ -39,6 +39,7 @@ dependencies {
 
 applicationDistribution.from(file(project(':VisionProcessor2016').projectDir.toString() + '/lib')) {
     into("lib")
+    exclude "opencv"
 }
 
 jar {
