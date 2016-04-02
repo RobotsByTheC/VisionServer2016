@@ -17,7 +17,8 @@ import org.opencv.core.Mat;
 import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.ImageHandler;
 import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
-import org.usfirst.frc.team2084.CMonster2016.vision.VideoServer;
+import org.usfirst.frc.team2084.CMonster2016.vision.TestVisionProcessor;
+import org.usfirst.frc.team2084.CMonster2016.vision.UDPVideoServer;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.capture.CameraCapture;
@@ -40,7 +41,7 @@ public class StandaloneVision {
 
     private CameraCapture camera;
     private VisionProcessor processor;
-    private VideoServer videoServer;
+    private UDPVideoServer videoServer;
 
     /**
      * Runs the vision processing algorithm and displays the results in a
@@ -67,7 +68,7 @@ public class StandaloneVision {
 
             processor = new HighGoalProcessor(camera);
 
-            videoServer = new VideoServer(5800, 20);
+            videoServer = new UDPVideoServer(20);
             videoServer.start();
 
             // Initialize the vision processor.
