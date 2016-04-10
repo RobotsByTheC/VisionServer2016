@@ -7,6 +7,7 @@
 package org.usfirst.frc2084.CMonster2016.vision;
 
 import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -59,8 +60,8 @@ public class StandaloneVision {
             } catch (InterruptedException e1) {
             }
 
-            aimingCamera = new CameraCapture(0);
-            intakeCamera = new CameraCapture(1);
+            aimingCamera = new CameraCapture(getCameraIndex(new File("/dev/aiming-camera")));
+            intakeCamera = new CameraCapture(getCameraIndex(new File("/dev/intake-camera")));
 
             processor = new HighGoalProcessor(aimingCamera);
 
@@ -138,6 +139,25 @@ public class StandaloneVision {
             System.out.println("Cannot start video server: " + ioe);
             System.exit(VIDEO_SERVER_ERROR);
         }
+    }
+
+    private static int getCameraIndex(File file) throws IOException {
+        String name = file.getCanonicalPath();
+
+        int offset = name.length();
+        for (int i = name.length() - 1; i >= 0; i--) {
+            char c = name.charAt(i);
+            if (Character.isDigit(c)) {
+                offset--;
+            } else {
+                if (offset == name.length()) {
+                    // No int at the end
+                    return Integer.MIN_VALUE;
+                }
+                return Integer.parseInt(name.substring(offset));
+            }
+        }
+        return Integer.parseInt(name.substring(offset));
     }
 
     private void outputImage(Mat image) {
