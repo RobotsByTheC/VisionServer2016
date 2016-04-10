@@ -50,9 +50,9 @@ public class StandaloneVision {
      */
     public StandaloneVision() {
         try {
-            NetworkTable.initialize();
-            // NetworkTable.setClientMode();
-            // NetworkTable.setIPAddress("10.20.84.2");
+            // NetworkTable.initialize();
+            NetworkTable.setClientMode();
+            NetworkTable.setIPAddress("10.20.84.2");
 
             // Wait to get latest network table values
             try {
