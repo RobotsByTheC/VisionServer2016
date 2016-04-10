@@ -15,12 +15,11 @@ import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
 import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
-import org.usfirst.frc.team2084.CMonster2016.vision.ImageHandler;
 import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
-import org.usfirst.frc.team2084.CMonster2016.vision.TestVisionProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.UDPVideoServer;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionParameters;
 import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor;
+import org.usfirst.frc.team2084.CMonster2016.vision.VisionProcessor.DebugHandler;
 import org.usfirst.frc.team2084.CMonster2016.vision.capture.CameraCapture;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -39,7 +38,8 @@ public class StandaloneVision {
     private ImageFrame imageFrame;
     private final HashMap<String, ImageFrame> debugFrames = new HashMap<>();
 
-    private CameraCapture camera;
+    private CameraCapture aimingCamera;
+    private CameraCapture intakeCamera;
     private VisionProcessor processor;
     private UDPVideoServer videoServer;
 
@@ -49,9 +49,9 @@ public class StandaloneVision {
      */
     public StandaloneVision() {
         try {
-            // NetworkTable.initialize();
-            NetworkTable.setClientMode();
-            NetworkTable.setIPAddress("10.20.84.2");
+            NetworkTable.initialize();
+            // NetworkTable.setClientMode();
+            // NetworkTable.setIPAddress("10.20.84.2");
 
             // Wait to get latest network table values
             try {
@@ -59,50 +59,16 @@ public class StandaloneVision {
             } catch (InterruptedException e1) {
             }
 
-            int device = VisionParameters.getCameraSourceLocal();
-            if (device != -1) {
-                camera = new CameraCapture(device);
-            } else {
-                camera = new CameraCapture(VisionParameters.getCameraSourceRemote());
-            }
+            aimingCamera = new CameraCapture(0);
+            intakeCamera = new CameraCapture(1);
 
-            processor = new HighGoalProcessor(camera);
+            processor = new HighGoalProcessor(aimingCamera);
 
             videoServer = new UDPVideoServer(20);
             videoServer.start();
 
             // Initialize the vision processor.
-            processor.addImageHandler(new ImageHandler() {
-
-                /**
-                 * Displays the processed image.
-                 */
-                @Override
-                public void imageProcessed(Mat image) {
-                    if (!headless) {
-                        try {
-                            SwingUtilities.invokeAndWait(() -> imageFrame.showImage(image));
-                        } catch (InvocationTargetException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        videoServer.setQuality(VisionParameters.getStreamQuality());
-                    }
-                    try {
-                        videoServer.sendImage(image);
-                    } catch (IOException e) {
-                        System.out.println("Cannot stream video over network: " + e);
-                    }
-
-                    if (VisionParameters.shouldShutdown()) {
-                        try {
-                            Runtime.getRuntime().exec("sudo poweroff").waitFor();
-                            System.exit(0);
-                        } catch (InterruptedException | IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+            processor.addDebugHandler(new DebugHandler() {
 
                 /**
                  * Shows the image in its own frame.
@@ -131,11 +97,64 @@ public class StandaloneVision {
                 initGUI();
             }
 
-            processor.start();
+            Mat intakeImage = new Mat();
+            Mat aimingImage = new Mat();
+
+            (new Thread(() -> {
+                intakeCamera.start();
+                while (true) {
+                    videoServer.setQuality(VisionParameters.getStreamQuality());
+
+                    if (VisionParameters.shouldShutdown()) {
+                        try {
+                            Runtime.getRuntime().exec("sudo poweroff").waitFor();
+                            System.exit(0);
+                        } catch (InterruptedException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (VisionParameters.isIntakeCamera()) {
+                        if (intakeCamera.capture(intakeImage, 300)) {
+                            outputImage(intakeImage);
+                        }
+                    }
+                }
+            })).start();
+
+            (new Thread(() -> {
+                aimingCamera.start();
+                while (true) {
+                    if (aimingCamera.capture(aimingImage, 300)) {
+                        processor.process(aimingImage);
+                        if (!VisionParameters.isIntakeCamera()) {
+                            outputImage(aimingImage);
+                        }
+                    }
+                }
+            })).start();
 
         } catch (IOException ioe) {
             System.out.println("Cannot start video server: " + ioe);
             System.exit(VIDEO_SERVER_ERROR);
+        }
+    }
+
+    private void outputImage(Mat image) {
+        if (!headless) {
+            try {
+                SwingUtilities.invokeAndWait(() -> imageFrame.showImage(image));
+            } catch (InvocationTargetException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            synchronized (videoServer) {
+                videoServer.sendImage(image);
+
+            }
+        } catch (IOException e) {
+            System.err.println("Could not stream video: " + e);
         }
     }
 
