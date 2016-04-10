@@ -63,6 +63,8 @@ public class StandaloneVision {
             aimingCamera = new CameraCapture(getCameraIndex(new File("/dev/aiming-camera")));
             intakeCamera = new CameraCapture(getCameraIndex(new File("/dev/intake-camera")));
 
+            intakeCamera.setResolution(HighGoalProcessor.IMAGE_SIZE);
+
             processor = new HighGoalProcessor(aimingCamera);
 
             videoServer = new UDPVideoServer(20);
@@ -171,7 +173,6 @@ public class StandaloneVision {
         try {
             synchronized (videoServer) {
                 videoServer.sendImage(image);
-
             }
         } catch (IOException e) {
             System.err.println("Could not stream video: " + e);
