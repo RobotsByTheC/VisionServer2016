@@ -37,9 +37,15 @@ dependencies {
   compile 'edu.wpi.first.wpilib.networktables.java:NetworkTables:3.+:' + ntType
 }
 
-applicationDistribution.from(file(project(':VisionProcessor2016').projectDir.toString() + '/lib')) {
-    into("lib")
-    exclude "opencv"
+distributions {
+    main {
+        contents {
+            from(file(project(':VisionProcessor2016').projectDir.toString() + '/lib')) {
+                into("lib")
+    			exclude "opencv"
+            }
+        }
+    }
 }
 
 jar {
