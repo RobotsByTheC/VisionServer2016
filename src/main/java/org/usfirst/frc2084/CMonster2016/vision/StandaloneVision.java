@@ -15,6 +15,7 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
+import org.usfirst.frc.team2084.CMonster2016.vision.BoulderProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2016.vision.UDPVideoServer;
@@ -41,7 +42,8 @@ public class StandaloneVision {
 
     private CameraCapture aimingCamera;
     private CameraCapture intakeCamera;
-    private VisionProcessor processor;
+    private VisionProcessor boulderProcessor;
+    private VisionProcessor goalProcessor;
     private UDPVideoServer videoServer;
 
     /**
@@ -65,36 +67,33 @@ public class StandaloneVision {
 
             intakeCamera.setResolution(HighGoalProcessor.IMAGE_SIZE);
 
-            processor = new HighGoalProcessor(aimingCamera);
+            goalProcessor = new HighGoalProcessor(aimingCamera);
+            boulderProcessor = new BoulderProcessor(intakeCamera);
 
             videoServer = new UDPVideoServer(20);
             videoServer.start();
 
-            // Initialize the vision processor.
-            processor.addDebugHandler(new DebugHandler() {
-
-                /**
-                 * Shows the image in its own frame.
-                 */
-                @Override
-                public void debugImage(String name, Mat image) {
-                    if (!headless) {
-                        try {
-                            SwingUtilities.invokeAndWait(() -> {
-                                ImageFrame debugFrame = debugFrames.get(name);
-                                if (debugFrame == null) {
-                                    debugFrame = new ImageFrame(name);
-                                    debugFrame.setVisible(true);
-                                    debugFrames.put(name, debugFrame);
-                                }
-                                debugFrame.showImage(image);
-                            });
-                        } catch (InvocationTargetException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
+            DebugHandler debugHandler = (name, image) -> {
+                if (!headless) {
+                    try {
+                        SwingUtilities.invokeAndWait(() -> {
+                            ImageFrame debugFrame = debugFrames.get(name);
+                            if (debugFrame == null) {
+                                debugFrame = new ImageFrame(name);
+                                debugFrame.setVisible(true);
+                                debugFrames.put(name, debugFrame);
+                            }
+                            debugFrame.showImage(image);
+                        });
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-            });
+            };
+
+            // Initialize the vision processor.
+            goalProcessor.addDebugHandler(debugHandler);
+            boulderProcessor.addDebugHandler(debugHandler);
 
             if (!headless) {
                 initGUI();
@@ -117,8 +116,9 @@ public class StandaloneVision {
                         }
                     }
 
-                    if (VisionParameters.isIntakeCamera()) {
-                        if (intakeCamera.capture(intakeImage, 300)) {
+                    if (intakeCamera.capture(intakeImage, 300)) {
+                        boulderProcessor.process(intakeImage);
+                        if (VisionParameters.isIntakeCamera()) {
                             outputImage(intakeImage);
                         }
                     }
@@ -129,7 +129,7 @@ public class StandaloneVision {
                 aimingCamera.start();
                 while (true) {
                     if (aimingCamera.capture(aimingImage, 300)) {
-                        processor.process(aimingImage);
+                        goalProcessor.process(aimingImage);
                         if (!VisionParameters.isIntakeCamera()) {
                             outputImage(aimingImage);
                         }
