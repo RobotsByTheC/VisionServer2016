@@ -48,6 +48,12 @@ distributions {
     }
 }
 
+task updateDist(type: Copy, dependsOn: ':jar') {
+	from jar.archivePath
+	from project(':VisionProcessor2016').projectDir.toString() + '/build/lib/VisionProcessor2016.jar'
+	into '$buildDir/install/VisionServer2016/lib'
+}
+
 jar {
   manifest {
     attributes 'Main-Class': 'org.usfirst.frc2084.CMonster2016.vision.StandaloneVision'
