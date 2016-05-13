@@ -44,6 +44,9 @@ distributions {
                 into("lib")
     			exclude "opencv"
             }
+            from(file(project(':VisionProcessor2016').projectDir.toString() + '/build/libs/gpuvision/shared')) {
+                into("lib")
+            }
         }
     }
 }
