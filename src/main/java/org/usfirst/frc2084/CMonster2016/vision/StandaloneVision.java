@@ -15,7 +15,6 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
-import org.usfirst.frc.team2084.CMonster2016.vision.BoulderProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.HighGoalProcessor;
 import org.usfirst.frc.team2084.CMonster2016.vision.OpenCVLoader;
 import org.usfirst.frc.team2084.CMonster2016.vision.UDPVideoServer;
@@ -42,7 +41,6 @@ public class StandaloneVision {
 
     private CameraCapture aimingCamera;
     private CameraCapture intakeCamera;
-    private VisionProcessor boulderProcessor;
     private VisionProcessor goalProcessor;
     private UDPVideoServer videoServer;
 
@@ -68,7 +66,6 @@ public class StandaloneVision {
             intakeCamera.setResolution(HighGoalProcessor.IMAGE_SIZE);
 
             goalProcessor = new HighGoalProcessor(aimingCamera);
-            boulderProcessor = new BoulderProcessor(intakeCamera);
 
             videoServer = new UDPVideoServer(20);
             videoServer.start();
@@ -93,7 +90,6 @@ public class StandaloneVision {
 
             // Initialize the vision processor.
             goalProcessor.addDebugHandler(debugHandler);
-            boulderProcessor.addDebugHandler(debugHandler);
 
             if (!headless) {
                 initGUI();
@@ -116,9 +112,8 @@ public class StandaloneVision {
                         }
                     }
 
-                    if (intakeCamera.capture(intakeImage, 300)) {
-                        boulderProcessor.process(intakeImage);
-                        if (VisionParameters.isIntakeCamera()) {
+                    if (VisionParameters.isIntakeCamera()) {
+                        if (intakeCamera.capture(intakeImage, 300)) {
                             outputImage(intakeImage);
                         }
                     }
